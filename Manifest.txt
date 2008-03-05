@@ -1,0 +1,7 @@
+History.txt
+Manifest.txt
+README.txt
+Rakefile
+bin/godo
+lib/godo.rb
+test/test_godo.rb

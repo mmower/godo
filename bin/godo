@@ -1,0 +1,12 @@
+#!/usr/local/bin/ruby -ws
+
+require 'trollop'
+
+opts = Trollop::options do
+  opt :t, "Create empty terminal windows", :type => Integer, :default => 0
+end
+
+require 'go_project'
+
+Godo.invoke( ARGV.shift, opts )
+
