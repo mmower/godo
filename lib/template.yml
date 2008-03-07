@@ -1,0 +1,75 @@
+heuristics:
+  rails: |
+    File.exists?( File.join( PROJECT_PATH, "config", "environment.rb" ) &&
+    File.exists?( File.join( PROJECT_PATH, "config", "environments", "development.rb" ) ) &&
+    File.exists?( File.join( PROJECT_PATH, "config", "environments", "testing.rb" ) )
+  rspec: |
+    File.exists?( File.join( PROJECT_PATH, "spec" ) )
+  svn: |
+    !`svn info #{PROJECT_PATH}`.split(%r{\n}).grep( /Repository Root:/ ).empty?
+  git: |
+    File.exists?( File.join( PROJECT_PATH, ".git" ) )
+
+actions:
+  mongrel:
+    label: mongrel
+    invoke: mongrel_rails start
+  devlog:
+    label: dev-log
+    invoke: tail -f log/development.log
+  reqlog:
+    label: req-log
+    invoke: tail -f log/request.log
+  autotest-unit:
+    label: tests
+    invoke: autotest
+  console:
+    label: console
+    invoke: ruby script/console
+  irb:
+    label: IRB
+    invoke: irb
+  diffly:
+    invoke: diffly .; exit
+  browser:
+    invoke: open -a BonEcho http://localhost:3000/; exit
+  terminal:
+    label: Con-<%= counter(:terminal) -%>
+  
+projects:
+  rails+svn:
+    heuristics:
+      - rails
+      - svn
+    actions:
+      - mongrel
+      - devlog
+      - reqlog
+      - autotest-unit
+      - console
+      - irb
+      - terminal
+      - terminal
+      - diffly
+      - browser
+  spec_rails_svn:
+    heuristics:
+      - rspec
+      - rails
+      - svn
+    actions:
+      - mongrel
+      - devlog
+      - reqlog
+      - autotest-spec
+      - console
+      - irb
+      - terminal
+      - terminal
+  rails_git:
+    heuristics:
+    actions:
+  spec_rails_git:
+    heuristics:
+    actions:
+
