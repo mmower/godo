@@ -9,6 +9,8 @@ heuristics:
     !`svn info #{PROJECT_PATH}`.split(%r{\n}).grep( /Repository Root:/ ).empty?
   git: |
     File.exists?( File.join( PROJECT_PATH, ".git" ) )
+  true: |
+    true
 
 actions:
   mongrel:
@@ -34,9 +36,29 @@ actions:
   browser:
     invoke: open -a BonEcho http://localhost:3000/; exit
   terminal:
-    label: Con-<%= counter(:terminal) -%>
+    label: Con-#{counter(:terminal)}
   
-projects:
+matches:
+  rails+spec+svn:
+    heuristics:
+      - rspec
+      - rails
+      - svn
+    actions:
+      - mongrel
+      - devlog
+      - reqlog
+      - autotest-spec
+      - console
+      - irb
+      - terminal
+      - terminal
+  rails+spec+git:
+     heuristics:
+       - rails
+       - rspec
+       - git
+     actions:
   rails+svn:
     heuristics:
       - rails
@@ -52,24 +74,16 @@ projects:
       - terminal
       - diffly
       - browser
-  spec_rails_svn:
+  rails+git:
     heuristics:
-      - rspec
       - rails
-      - svn
+      - git
     actions:
-      - mongrel
-      - devlog
-      - reqlog
-      - autotest-spec
-      - console
-      - irb
-      - terminal
-      - terminal
-  rails_git:
+  default:
     heuristics:
+      - true
     actions:
-  spec_rails_git:
-    heuristics:
-    actions:
+      - terminal
 
+godo:
+  projects: ~/Projects
