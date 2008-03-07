@@ -1,4 +1,8 @@
-class Godo
+require 'yaml'
+
+require 'project'
+
+module Godo
   VERSION = '1.0.0'
   LIBPATH = File.expand_path( File.dirname( __FILE__ ) )
   
@@ -21,6 +25,12 @@ class Godo
   end
   
   def self.invoke( query, options )
-    
+    options = YAML::load( File.read( File.expand_path( "~/.godo" ) ) )
+    project = Project.find( query, options )
+    if project
+      true
+    else
+      false
+    end
   end
 end
