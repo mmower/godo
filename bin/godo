@@ -3,10 +3,9 @@
 require 'trollop'
 
 opts = Trollop::options do
-  opt :t, "Create empty terminal windows", :type => Integer, :default => 0
+  opt :kind, "Override heuristics to specify project type", :short => 'k'
 end
 
-require 'go_project'
+require 'godo'
 
 Godo.invoke( ARGV.shift, opts )
-
