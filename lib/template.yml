@@ -15,26 +15,26 @@ heuristics:
 actions:
   mongrel:
     label: mongrel
-    invoke: mongrel_rails start
+    command: mongrel_rails start
   devlog:
     label: dev-log
-    invoke: tail -f log/development.log
+    command: tail -f log/development.log
   reqlog:
     label: req-log
-    invoke: tail -f log/request.log
+    command: tail -f log/request.log
   autotest-unit:
     label: tests
-    invoke: autotest
+    command: autotest
   console:
     label: console
-    invoke: ruby script/console
+    command: ruby script/console
   irb:
     label: IRB
-    invoke: irb
+    command: irb
   diffly:
-    invoke: diffly .; exit
+    command: diffly .; exit
   browser:
-    invoke: open -a BonEcho http://localhost:3000/; exit
+    command: open -a BonEcho http://localhost:3000/; exit
   terminal:
     label: Con-#{counter(:terminal)}
 
@@ -124,3 +124,5 @@ projects:
   - ~/Projects/ruby
   - ~/Projects/rails
   - ~/Projects/Cocoa
+
+sessions: ITerm
