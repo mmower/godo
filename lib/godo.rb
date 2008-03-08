@@ -33,15 +33,40 @@ module Godo
     if paths.empty?
       puts "No match for: #{query}"
     else
+      paths = strip_inexact_matches( query, paths )
       if paths.size > 1
-        puts "Multiple matches for: #{query}"
-        paths.each do |path|
-          puts "\t#{path}"
+        if base_match( paths )
+          self.invoke_project( paths.first, options )
+        else
+          puts "Multiple ambgiuous matches for: #{query}"
+          paths.each do |path|
+            puts "\t#{path}"
+          end
         end
       else
-        project = Project.new( options )
-        project.invoke( paths.first )
+        self.invoke_project( paths.first, options )
       end
     end
+  end
+  
+  def self.strip_inexact_matches( query, paths )
+    # If any of the paths have the query as a complete path component
+    # then strip any paths that don't
+    if paths.any? { |path| path.split( File::SEPARATOR ).any? { |component| query == component } }
+      paths.select { |path| path.split( File::SEPARATOR ).any? { |component| query == component } }
+    else
+      paths
+    end
+  end
+    
+  def self.base_match( paths )
+    # Is the first path a prefix for all subsequent-paths
+    path_match = Regexp.compile( "^#{paths.first}" )
+    paths[1..-1].all? { |path| path.match( path_match ) }
+  end
+  
+  def self.invoke_project( path, options )
+    project = Project.new( options )
+    project.invoke( path )
   end
 end
