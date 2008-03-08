@@ -14,6 +14,7 @@ module Godo
     def invoke( path )
       matcher = find_match( path )
       if matcher
+        puts "Project type: #{matcher["name"]}"
         invoke_actions( path, matcher["actions"] )
       else
         puts "No match project actions"

@@ -37,6 +37,8 @@ actions:
     command: open -a BonEcho http://localhost:3000/; exit
   terminal:
     label: Con-#{counter(:terminal)}
+  textmate:
+    command: mate .; exit
 
 ignores:
   - \.svn
@@ -84,6 +86,9 @@ matchers:
       - irb
       - terminal
       - terminal
+      - diffly
+      - browser
+      - textmate
   -
     name: rails+spec+git
     heuristics:
@@ -91,6 +96,17 @@ matchers:
       - rspec
       - git
     actions:
+      - mongrel
+      - devlog
+      - reqlog
+      - autotest-spec
+      - console
+      - irb
+      - terminal
+      - terminal
+      - view-git
+      - browser
+      - textmate
   -
     name: rails+svn
     heuristics:
@@ -107,12 +123,24 @@ matchers:
       - terminal
       - diffly
       - browser
+      - textmate
   -
     name: rails+git
     heuristics:
       - rails
       - git
     actions:
+      - mongrel
+      - devlog
+      - reqlog
+      - autotest-unit
+      - console
+      - irb
+      - terminal
+      - terminal
+      - view-git
+      - browser
+      - textmate
   -
     name: default
     heuristics:
