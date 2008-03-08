@@ -1,3 +1,9 @@
+# Heuristics are used to "sniff" a project folder once found
+# and determine whether it is of some kind, e.g. a Rails project.
+# Heuristic code should be a ruby expression returning true or
+# false. The value of 'project_path' will be bound to the found
+# path when the heuristic is run.
+#
 heuristics:
   rails: |
     File.exists?( File.join( project_path, "config", "environment.rb" ) ) &&
@@ -12,6 +18,16 @@ heuristics:
   true: |
     true
 
+# Actions are shell commands that are run in their own terminal session (by default
+# this will be a new tab in iTerm). Each action can optionally label the terminal
+# session.
+#
+# Where the session should not hang around after the command has run (e.g. opening
+# a GUI app) then specify
+#   exit: true.
+# This will ensure that the session is closes without causing AppleScript
+# errors due to terminal sessions getting re-numbered.
+#
 actions:
   mongrel:
     label: mongrel
@@ -35,16 +51,22 @@ actions:
     label: IRB
     command: irb
   diffly:
-    command: diffly .; sleep 5; exit
+    command: diffly .
+    exit: true
   browser:
-    command: open -a BonEcho http://localhost:3000/; sleep 5; exit
+    command: open -a BonEcho http://localhost:3000/
+    exit: true
   terminal:
     label: Con-#{counter(:terminal)}
   textmate:
-    command: mate .; sleep 5; exit
+    command: mate .
+    exit: true
   view-git:
-    command: (PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/bin nohup gitk &); sleep 5; exit
+    command: (PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/bin nohup gitk &)
+    exit: true
 
+# A list of paths that should be ignored when searching for the project path
+#
 ignores:
   - \.svn
   - \.git
@@ -74,7 +96,15 @@ ignores:
   - .*\.xcodeproj
   - .*\.wdgtproj
   - .*\.app
-  
+
+# Once the project folder has been identified each listed matcher, in turn, gets to run
+# its heuristics against the folder. Once a matcher has all of its heuristics succeed
+# that matcher is selected and its action are run.
+#
+# Where matchers share common heuristics they should be listed in order of most to least
+# specific, e.g. rail+spec+svn should be listed before rails+svn otherwise the more
+# specific matcher will not get a chance to run.
+#
 matchers:
   -
     name: rails+spec+svn
@@ -153,9 +183,12 @@ matchers:
     actions:
       - terminal
 
+# A list of project root paths to be searched
 projects:
   - ~/Projects/ruby
   - ~/Projects/rails
   - ~/Projects/Cocoa
 
+# The session controller to use. Right now iTerm is the only
+# game in town.
 sessions: ITerm

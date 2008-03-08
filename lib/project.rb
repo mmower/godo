@@ -28,11 +28,23 @@ module Godo
       
       missing_actions = action_group.find_all { |action| !@actions.has_key?( action ) }
       if missing_actions.empty?
-        action_group.each { |action|
-          puts "\trunning: #{action}"
-          label = @actions[action]["label"]
-          command = @actions[action]["command"]
-          session.create( label, command )
+        action_group.each { |action_name|
+          action = @actions[action_name]
+          exit = case action["exit"]
+          when true
+            true
+          when "true"
+            true
+          when "1"
+            true
+          when "y"
+            true
+          else
+            false
+          end
+          
+          puts "\trunning: #{action_name} (exit: #{exit})"
+          session.create( action["label"], action["command"], exit )
         }
       else
         missing_actions.each do |action|

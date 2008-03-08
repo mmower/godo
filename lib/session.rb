@@ -8,11 +8,15 @@ module Godo
       @counters = Hash.new { 0 }
     end
     
-    def create( label, command )
+    def create( label, command, exit )
+      
       start
       set_label( label )
       execute( "cd #{path}; clear;" )
       execute( command ) unless command.nil?
+      if exit
+        execute( "sleep 5; exit" )
+      end
     end
     
     def set_label( label )
