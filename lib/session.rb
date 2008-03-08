@@ -9,11 +9,17 @@ module Godo
     end
     
     def create( label, command, exit )
-      
       start
       set_label( label )
       execute( "cd #{path}; clear;" )
-      execute( command ) unless command.nil?
+      
+      if command
+        puts "Command: #{command}"
+        command = eval( "\"" + command + "\"", get_binding )
+        puts "\tNow: #{command}"
+        execute( command )
+      end
+      
       if exit
         execute( "sleep 5; exit" )
       end
@@ -21,7 +27,7 @@ module Godo
     
     def set_label( label )
       if label
-        label = eval( "\"" + label + "\"" )      
+        label = eval( "\"" + label + "\"" )
         execute( "echo -n -e \"\\033]0;#{label}\\007\"; clear;" )
       else
         execute( "clear;" )
@@ -39,6 +45,11 @@ module Godo
     def counter( name )
       @counters[name] += 1
       "#{@counters[name]}"
+    end
+    
+  private
+    def get_binding( project_path = @path )
+      binding
     end
     
   end

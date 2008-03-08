@@ -29,6 +29,9 @@ heuristics:
 # errors due to terminal sessions getting re-numbered.
 #
 actions:
+  say:
+    command: "say #{project_path}"
+    exit: true
   mongrel:
     label: mongrel
     command: mongrel_rails start
@@ -113,6 +116,7 @@ matchers:
       - rails
       - svn
     actions:
+      - say
       - mongrel
       - devlog
       - reqlog
@@ -131,6 +135,7 @@ matchers:
       - rspec
       - git
     actions:
+      - say
       - mongrel
       - devlog
       - reqlog
@@ -148,6 +153,7 @@ matchers:
       - rails
       - svn
     actions:
+      - say
       - mongrel
       - devlog
       - reqlog
@@ -165,6 +171,7 @@ matchers:
       - rails
       - git
     actions:
+      - say
       - mongrel
       - devlog
       - reqlog
@@ -182,6 +189,7 @@ matchers:
       - true
     actions:
       - terminal
+      - say
 
 # A list of project root paths to be searched
 projects:
