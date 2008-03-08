@@ -27,46 +27,57 @@ module Godo
   end
   
   def self.invoke( query, options )
-    options = YAML::load( File.read( File.expand_path( "~/.godo" ) ) )
+    Invoker.new( options ).invoke( query )
+  end
+  
+  class Invoker
     
-    paths = Finder.find( query, options )
-    if paths.empty?
-      puts "No match for: #{query}"
-    else
-      paths = strip_inexact_matches( query, paths )
-      if paths.size > 1
-        if base_match( paths )
-          self.invoke_project( paths.first, options )
-        else
-          puts "Multiple ambgiuous matches for: #{query}"
-          paths.each do |path|
-            puts "\t#{path}"
-          end
-        end
+    def initialize( options )
+      @options = options
+      @config = YAML::load( File.read( File.expand_path( "~/.godo" ) ) )
+    end
+    
+    def invoke( query )
+      paths = Finder.find( query, @config )
+      if paths.empty?
+        puts "No match for: #{query}"
       else
-        self.invoke_project( paths.first, options )
+        paths = strip_inexact_matches( query, paths )
+        if paths.size > 1
+          if base_match( paths )
+            invoke_project( paths.first )
+          else
+            puts "Multiple ambgiuous matches for: #{query}"
+            paths.each do |path|
+              puts "\t#{path}"
+            end
+          end
+        else
+          invoke_project( paths.first )
+        end
       end
     end
-  end
-  
-  def self.strip_inexact_matches( query, paths )
-    # If any of the paths have the query as a complete path component
-    # then strip any paths that don't
-    if paths.any? { |path| path.split( File::SEPARATOR ).any? { |component| query == component } }
-      paths.select { |path| path.split( File::SEPARATOR ).any? { |component| query == component } }
-    else
-      paths
+
+    def strip_inexact_matches( query, paths )
+      # If any of the paths have the query as a complete path component
+      # then strip any paths that don't
+      if paths.any? { |path| path.split( File::SEPARATOR ).any? { |component| query == component } }
+        paths.select { |path| path.split( File::SEPARATOR ).any? { |component| query == component } }
+      else
+        paths
+      end
+    end
+    
+    def base_match( paths )
+      # Is the first path a prefix for all subsequent-paths
+      path_match = Regexp.compile( "^#{paths.first}" )
+      paths[1..-1].all? { |path| path.match( path_match ) }
+    end
+
+    def invoke_project( path )
+      project = Project.new( @options, @config )
+      project.invoke( path )
     end
   end
-    
-  def self.base_match( paths )
-    # Is the first path a prefix for all subsequent-paths
-    path_match = Regexp.compile( "^#{paths.first}" )
-    paths[1..-1].all? { |path| path.match( path_match ) }
-  end
   
-  def self.invoke_project( path, options )
-    project = Project.new( options )
-    project.invoke( path )
-  end
 end

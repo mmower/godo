@@ -6,7 +6,7 @@ require 'godo'
 
 opts = Trollop::options do
   opt :install, "Create a fresh ~/.godo configuration file"
-  opt :override, "Override heuristics to specify project type", :short => 'o'
+  opt :override, "Override heuristics to specify project type", :short => 'o', :type => :string
 end
 
 if opts[:install]
@@ -24,9 +24,6 @@ else
   rescue Errno::ENOENT => e
     puts e.message
     puts "Use --install to create the default configuration file."
-    exit 1
-  rescue => e
-    puts e.class.name, e.message
     exit 1
   else
     exit 0

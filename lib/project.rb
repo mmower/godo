@@ -2,13 +2,14 @@ module Godo
   
   class Project
     
-    def initialize( options )
-      @heuristics = options["heuristics"]
-      @actions = options["actions"]
-      @matchers = options["matchers"]
+    def initialize( options, config )
+      @options = options
+      @heuristics = config["heuristics"]
+      @actions = config["actions"]
+      @matchers = config["matchers"]
       
-      require options["sessions"].downcase
-      @session_class = Godo.const_get( "#{options[ "sessions" ]}Session" )
+      require config["sessions"].downcase
+      @session_class = Godo.const_get( "#{config[ "sessions" ]}Session" )
     end
     
     def invoke( path )
@@ -17,7 +18,7 @@ module Godo
         puts "Project type: #{matcher["name"]}"
         invoke_actions( path, matcher["actions"] )
       else
-        puts "No match project actions"
+        puts "No matching project type"
       end
     end
     
@@ -32,11 +33,16 @@ module Godo
     end
   
     def find_match( path )
-      @matchers.detect { |matcher|
-        matcher["heuristics"].all? { |heuristic|
-          satisfies?( path, heuristic )
+      if @options[:override]
+        puts @options[:override]
+        @matchers.find { |matcher| matcher["name"] == @options[:override] }
+      else
+        @matchers.detect { |matcher|
+          matcher["heuristics"].all? { |heuristic|
+            satisfies?( path, heuristic )
+          }
         }
-      }
+      end
     end
   
     def satisfies?( path, heuristic )
