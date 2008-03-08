@@ -7,20 +7,28 @@ module Godo
     
     def initialize( path )
       super( path )
-      @iterm = Appscript::app( 'iTerm' )
+      @@iterm ||= Appscript::app( 'iTerm' )
     end
       
     def create( label, command )
-      session = @iterm.current_terminal.sessions.end.make( :new => :session )
-      session.exec( :command => 'bash -l' )
-      session.write( :text => "cd #{path}" )
+      start
+      execute( "cd #{path}" )
       if label
         label = eval( "\"" + label + "\"" )      
-        session.write( :text => "echo -n -e \"\\033]0;#{label}\\007\"; clear;" )
+        execute( "echo -n -e \"\\033]0;#{label}\\007\"; clear;" )
       else
-        session.write( :text => "clear;" )
+        execute( "clear;" )
       end
-      session.write( :text => command ) unless command.nil?
+      execute( command ) unless command.nil?
+    end
+    
+    def start
+      @session = @@iterm.current_terminal.sessions.end.make( :new => :session )
+      @session.exec( :command => 'bash -l' )
+    end
+    
+    def execute( command )
+      @session.write( :text => command )
     end
     
   end
