@@ -11,11 +11,15 @@ module Godo
     end
       
     def create( label, command )
-      label = eval( "\"" + label + "\"" )
       session = @iterm.current_terminal.sessions.end.make( :new => :session )
       session.exec( :command => 'bash -l' )
       session.write( :text => "cd #{path}" )
-      session.write( :text => "echo -n -e \"\\033]0;#{label}\\007\"; clear;" )
+      if label
+        label = eval( "\"" + label + "\"" )      
+        session.write( :text => "echo -n -e \"\\033]0;#{label}\\007\"; clear;" )
+      else
+        session.write( :text => "clear;" )
+      end
       session.write( :text => command ) unless command.nil?
     end
     
