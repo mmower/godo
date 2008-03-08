@@ -1,8 +1,5 @@
 require 'yaml'
 
-require 'finder'
-require 'project'
-
 module Godo
   VERSION = '1.0.0'
   LIBPATH = File.expand_path( File.dirname( __FILE__ ) )
@@ -38,6 +35,7 @@ module Godo
     end
     
     def invoke( query )
+      require 'finder'
       paths = Finder.find( query, @config )
       if paths.empty?
         puts "No match for: #{query}"
@@ -75,6 +73,7 @@ module Godo
     end
 
     def invoke_project( path )
+      require 'project'
       project = Project.new( @options, @config )
       project.invoke( path )
     end

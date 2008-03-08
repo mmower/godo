@@ -4,4 +4,8 @@ README.txt
 Rakefile
 bin/godo
 lib/godo.rb
-test/test_godo.rb
+lib/finder.rb
+lib/iterm.rb
+lib/project.rb
+lib/session.rb
+lib/template.yml
