@@ -7,24 +7,45 @@
 go (to project) do (stuffs)
 
 godo provides a smart way of opening a project folder and invoking a set of commands appropriate to
-that project. Examples might be starting mongrel, tailing one or more logs, starting consoles or irb,
-opening an empty terminal session, or making an ssh connection.
+that project. Examples might be starting mongrel, tailing one or more logs, starting consoles or IRB,
+opening empty terminal sessions, or making ssh connections.
+
+godo works by searching your project paths for a search string and attempting to find the project you
+are talking about. It makes some straightforward efforts to disambiguate.
+
+godo then uses heuristics (which can be overriden or extended) to figure out what type of project it is,
+for example a RoR project using RSpec and Subversion. It then invokes a series of action appropriate to
+that project type, each action in its own terminal session.
+
+godo is entirely configured by a YAML file (~/.godo) that contains project types, heuristics, actions,
+project paths, and a session controller.
+	
+godo comes with an iTerm session controller that uses the rb-appscript gem to control iTerm. It should
+be straightforward to add a controller for Leopard Terminal or a controller that works in a different way
+(e.g. creating new windows instead of new tabs).
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
+* All-in-one configuration file
+* Flexible heuristics for detecting project type
+* Flexible actions for running commands
 
 == SYNOPSIS:
 
-godo <projectname>
+godo project-search-string
+
+To override the project type use -o <matcher-name>
 
 == REQUIREMENTS:
 
 * Trollop
+* rb-appscript
 
 == INSTALL:
 
 * sudo gem install godo
+* godo --install
+* mate|vi|emacs ~/.godo
 
 == LICENSE:
 
