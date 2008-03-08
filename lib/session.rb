@@ -9,7 +9,27 @@ module Godo
     end
     
     def create( label, command )
-      raise "Session subclasses must define #create!"
+      start
+      set_label( label )
+      execute( "cd #{path}" )
+      execute( command ) unless command.nil?
+    end
+    
+    def set_label( label )
+      if label
+        label = eval( "\"" + label + "\"" )      
+        execute( "echo -n -e \"\\033]0;#{label}\\007\"; clear;" )
+      else
+        execute( "clear;" )
+      end
+    end
+    
+    def start
+      raise "#{self.class.name} must implement #start"
+    end
+    
+    def execute( command )
+      raise "#{self.class.name} must implement #execute"
     end
     
     def counter( name )
