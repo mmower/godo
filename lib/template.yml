@@ -6,7 +6,7 @@ heuristics:
   rspec: |
     File.exists?( File.join( project_path, "spec" ) )
   svn: |
-    !`svn info #{project_path}`.split(%r{\n}).grep( /Repository Root:/ ).empty?
+    File.exists?( File.join( project_path, ".svn" ) )
   git: |
     File.exists?( File.join( project_path, ".git" ) )
   true: |
@@ -25,6 +25,9 @@ actions:
   autotest-unit:
     label: tests
     command: autotest
+  autotest-spec:
+    label: specs
+    command: autotest
   console:
     label: console
     command: ruby script/console
@@ -39,6 +42,8 @@ actions:
     label: Con-#{counter(:terminal)}
   textmate:
     command: mate .; exit
+  view-git:
+    command: PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/bin nohup gitk &; exit
 
 ignores:
   - \.svn

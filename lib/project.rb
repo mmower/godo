@@ -25,11 +25,20 @@ module Godo
   private
     def invoke_actions( path, action_group )
       session = @session_class.new( path )
-      action_group.each { |action|
-        label = @actions[action]["label"]
-        command = @actions[action]["command"]
-        session.create( label, command )
-      }
+      
+      missing_actions = action_group.find_all { |action| !@actions.has_key?( action ) }
+      if missing_actions.empty?
+        action_group.each { |action|
+          puts "\trunning: #{action}"
+          label = @actions[action]["label"]
+          command = @actions[action]["command"]
+          session.create( label, command )
+        }
+      else
+        missing_actions.each do |action|
+          puts "\tMissing action: #{action}"
+        end
+      end
     end
   
     def find_match( path )
