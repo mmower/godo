@@ -11,7 +11,7 @@ module Godo
     def create( label, command )
       start
       set_label( label )
-      execute( "cd #{path}" )
+      execute( "cd #{path}; clear;" )
       execute( command ) unless command.nil?
     end
     
