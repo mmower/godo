@@ -12,6 +12,7 @@ module Godo
   end
   
   def self.install_config
+    raise "Will not overwrite config. Please delete ~/.godo if you wish to update it." if File.exists?( File.expand_path( '~/.godo' ) )
     self.copy( libpath( 'template.yml' ), '~/.godo' )
   end
   
