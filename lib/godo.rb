@@ -1,5 +1,6 @@
 require 'yaml'
 
+require 'finder'
 require 'project'
 
 module Godo
@@ -26,11 +27,20 @@ module Godo
   
   def self.invoke( query, options )
     options = YAML::load( File.read( File.expand_path( "~/.godo" ) ) )
-    project = Project.find( query, options )
-    if project
-      true
+    
+    paths = Finder.find( query, options )
+    if paths.empty?
+      puts "No match for: #{query}"
     else
-      false
+      if paths.size > 1
+        puts "Multiple matches for: #{query}"
+        paths.each do |path|
+          puts "\t#{path}"
+        end
+      else
+        project = Project.new( options )
+        project.invoke( paths.first )
+      end
     end
   end
 end

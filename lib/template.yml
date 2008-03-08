@@ -1,14 +1,14 @@
 heuristics:
   rails: |
-    File.exists?( File.join( PROJECT_PATH, "config", "environment.rb" ) &&
-    File.exists?( File.join( PROJECT_PATH, "config", "environments", "development.rb" ) ) &&
-    File.exists?( File.join( PROJECT_PATH, "config", "environments", "testing.rb" ) )
+    File.exists?( File.join( project_path, "config", "environment.rb" ) ) &&
+    File.exists?( File.join( project_path, "config", "environments", "development.rb" ) ) &&
+    File.exists?( File.join( project_path, "config", "environments", "testing.rb" ) )
   rspec: |
-    File.exists?( File.join( PROJECT_PATH, "spec" ) )
+    File.exists?( File.join( project_path, "spec" ) )
   svn: |
-    !`svn info #{PROJECT_PATH}`.split(%r{\n}).grep( /Repository Root:/ ).empty?
+    !`svn info #{project_path}`.split(%r{\n}).grep( /Repository Root:/ ).empty?
   git: |
-    File.exists?( File.join( PROJECT_PATH, ".git" ) )
+    File.exists?( File.join( project_path, ".git" ) )
   true: |
     true
 
@@ -37,9 +37,40 @@ actions:
     invoke: open -a BonEcho http://localhost:3000/; exit
   terminal:
     label: Con-#{counter(:terminal)}
+
+ignores:
+  - \.svn
+  - \.git
+  - CVS
+  - app
+  - lib
+  - vendor
+  - config
+  - db
+  - log
+  - public
+  - script
+  - test
+  - spec
+  - tmp
+  - doc
+  - components
+  - rdoc
+  - generators
+  - data
+  - man
+  - build
+  - backup
+  - bin
+  - include
+  - .*\.lproj
+  - .*\.xcodeproj
+  - .*\.wdgtproj
+  - .*\.app
   
-matches:
-  rails+spec+svn:
+matchers:
+  -
+    name: rails+spec+svn
     heuristics:
       - rspec
       - rails
@@ -53,13 +84,15 @@ matches:
       - irb
       - terminal
       - terminal
-  rails+spec+git:
-     heuristics:
-       - rails
-       - rspec
-       - git
-     actions:
-  rails+svn:
+  -
+    name: rails+spec+git
+    heuristics:
+      - rails
+      - rspec
+      - git
+    actions:
+  -
+    name: rails+svn
     heuristics:
       - rails
       - svn
@@ -74,16 +107,20 @@ matches:
       - terminal
       - diffly
       - browser
-  rails+git:
+  -
+    name: rails+git
     heuristics:
       - rails
       - git
     actions:
-  default:
+  -
+    name: default
     heuristics:
       - true
     actions:
       - terminal
 
-godo:
-  projects: ~/Projects
+projects:
+  - ~/Projects/ruby
+  - ~/Projects/rails
+  - ~/Projects/Cocoa

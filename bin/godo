@@ -13,17 +13,17 @@ if opts[:install]
   begin
     Godo.install_config
     puts "Installed configuration file ~/.godo, please customise"
+    exit 0
   rescue => e
     puts e.message
     exit 1
   end
 else
-  begin
-    Godo.invoke( ARGV.shift, opts )
-  rescue => e
-    puts e.message
-    exit 1
-  else
-    exit 0
-  end
+  Godo.invoke( ARGV.shift, opts )
+  # rescue => e
+  #   puts e.message
+  #   exit 1
+  # else
+  #   exit 0
+  # end
 end
