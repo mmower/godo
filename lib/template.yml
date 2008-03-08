@@ -2,7 +2,7 @@ heuristics:
   rails: |
     File.exists?( File.join( project_path, "config", "environment.rb" ) ) &&
     File.exists?( File.join( project_path, "config", "environments", "development.rb" ) ) &&
-    File.exists?( File.join( project_path, "config", "environments", "testing.rb" ) )
+    File.exists?( File.join( project_path, "config", "environments", "test.rb" ) )
   rspec: |
     File.exists?( File.join( project_path, "spec" ) )
   svn: |
