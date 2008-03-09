@@ -14,9 +14,7 @@ module Godo
       execute( "cd #{path}; clear;" )
       
       if command
-        puts "Command: #{command}"
         command = eval( "\"" + command + "\"", get_binding )
-        puts "\tNow: #{command}"
         execute( command )
       end
       

@@ -4,3 +4,8 @@
 
   * Birthday!
 
+=== 1.0.1 / 2008-03-09
+
+* 1 minor fix
+
+  * Removed some test fluff that got left in the release

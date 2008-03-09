@@ -116,7 +116,6 @@ matchers:
       - rails
       - svn
     actions:
-      - say
       - mongrel
       - devlog
       - reqlog
@@ -135,7 +134,6 @@ matchers:
       - rspec
       - git
     actions:
-      - say
       - mongrel
       - devlog
       - reqlog
@@ -153,7 +151,6 @@ matchers:
       - rails
       - svn
     actions:
-      - say
       - mongrel
       - devlog
       - reqlog
@@ -171,7 +168,6 @@ matchers:
       - rails
       - git
     actions:
-      - say
       - mongrel
       - devlog
       - reqlog
@@ -189,7 +185,6 @@ matchers:
       - true
     actions:
       - terminal
-      - say
 
 # A list of project root paths to be searched
 projects:
