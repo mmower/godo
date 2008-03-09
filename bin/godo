@@ -20,7 +20,7 @@ if opts[:install]
   end
 else
   begin
-    Godo.invoke( ARGV.shift, opts )
+    Godo.godo( ARGV.shift, opts )
   rescue Errno::ENOENT => e
     puts e.message
     puts "Use --install to create the default configuration file."
