@@ -194,4 +194,4 @@ projects:
 
 # The session controller to use. Right now iTerm is the only
 # game in town.
-sessions: ITerm
+sessions: ITermSession

@@ -52,4 +52,7 @@ module Godo
     
   end
   
+  # Load all Session subclasses in lib/sessions/*.rb
+  Dir.glob( "#{libpath('sessions')}/*.rb" ) { |path| require path }
+  
 end

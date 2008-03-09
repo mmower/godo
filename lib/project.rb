@@ -1,3 +1,5 @@
+require 'session'
+
 module Godo
   
   class Project
@@ -7,9 +9,7 @@ module Godo
       @heuristics = config["heuristics"]
       @actions = config["actions"]
       @matchers = config["matchers"]
-      
-      require config["sessions"].downcase
-      @session_class = Godo.const_get( "#{config[ "sessions" ]}Session" )
+      @session_class = Godo.const_get( config["sessions"] )
     end
     
     def invoke( path )
