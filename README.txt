@@ -6,23 +6,29 @@
 
 go (to project) do (stuffs)
 
-godo provides a smart way of opening a project folder and invoking a set of commands appropriate to
-that project. Examples might be starting mongrel, tailing one or more logs, starting consoles or IRB,
-opening empty terminal sessions, or making ssh connections.
+godo provides a smart way of opening a project folder in multiple terminal tabs and, in each tab,
+invoking a commands appropriate to that project. For example if the folder contains a Rails project
+the actions might include: starting mongrel, tailing one or more logs, starting consoles or IRB
+sessions, tailing production logs, opening an editor, running autospec, or gitk.
 
-godo works by searching your project paths for a search string and attempting to find the project you
-are talking about. It makes some straightforward efforts to disambiguate.
+godo works by searching your project paths for a given search string and trying to match it against
+paths found in one or more configured project roots. It will make some straightforward efforts to
+disambiguate among multiple matches to find the one you want.
 
-godo then uses heuristics (which can be overriden or extended) to figure out what type of project it is,
-for example a RoR project using RSpec and Subversion. It then invokes a series of action appropriate to
-that project type, each action in its own terminal session.
+godo then uses configurable heuristics to figure out what type of project it is, for example "a RoR
+project using RSpec and Subversion". From that it will invokes a series of action appropriate to the
+type of project detected with each action being run, from the project folder, in its own terminal
+session.
 
 godo is entirely configured by a YAML file (~/.godo) that contains project types, heuristics, actions,
-project paths, and a session controller.
+project paths, and a session controller. A sample configuration file is provided that can be installed
+using godo --install.
 	
-godo comes with an iTerm session controller that uses the rb-appscript gem to control iTerm. It should
-be straightforward to add a controller for Leopard Terminal or a controller that works in a different way
-(e.g. creating new windows instead of new tabs).
+godo comes with an iTerm session controller for MacOSX that uses the rb-appscript gem to control iTerm
+(see lib/session.rb and lib/sessions/iterm_session.rb). It should be relatively straightforward to add
+new controller (e.g. for Leopard Terminal.app), or a controller that works in a different way (e.g. by
+creating new windows instead of new tabs). There is nothing MacOSX specific about the rest of godo so
+creating controllers for other unixen should be straightforward if they can be controlled from ruby.
 
 == FEATURES/PROBLEMS:
 
@@ -32,9 +38,19 @@ be straightforward to add a controller for Leopard Terminal or a controller that
 
 == SYNOPSIS:
 
-godo project-search-string
+To install the default configuration (will not overwrite an existing configuration file)
 
-To override the project type use -o <matcher-name>
+godo --install
+
+To open a project with it's actions
+
+godo <project>
+
+Where project is a search term that will match part of the project path name.
+
+To open a project and override the project type (i.e. do not use heuristics):
+	
+godo -o <matcher> <project>
 
 == REQUIREMENTS:
 
