@@ -5,7 +5,7 @@ Rakefile
 bin/godo
 lib/godo.rb
 lib/finder.rb
-lib/iterm.rb
 lib/project.rb
 lib/session.rb
 lib/template.yml
+lib/sessions/iterm_session.rb
