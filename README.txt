@@ -30,6 +30,12 @@ new controller (e.g. for Leopard Terminal.app), or a controller that works in a 
 creating new windows instead of new tabs). There is nothing MacOSX specific about the rest of godo so
 creating controllers for other unixen should be straightforward if they can be controlled from ruby.
 
+godo is a rewrite of my original 'gp' script (http://matt.blogs.it/entries/00002674.html) which fixes
+a number of the deficiencies of that script, turns it into a gem, has a better name, and steals the
+idea of using heuristics to detect project types from Solomon Whites gp variant (http://onrails.org/articles/2007/11/28/scripting-the-leopard-terminal).
+	
+godo lives at the excellent GitHub: http://github.com/mmower/godo/ and accepts patches.
+
 == FEATURES/PROBLEMS:
 
 * All-in-one configuration file
