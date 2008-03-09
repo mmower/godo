@@ -1,6 +1,6 @@
 = godo
 
-* http://rubymatt.rubyforge.org/godo
+* http://simplyruby.rubyforge.org/godo
 
 == DESCRIPTION:
 

@@ -5,7 +5,7 @@ require 'hoe'
 require './lib/godo.rb'
 
 Hoe.new('godo', Godo::VERSION) do |p|
-  p.rubyforge_name = 'rubymatt'
+  p.rubyforge_name = 'simplyruby'
   p.developer( 'Matt Mower', 'self@mattmower.com' )
   p.extra_deps << ['trollop','>= 1.7']
   p.extra_deps << ['rb-appscript','>= 0.5.1']
