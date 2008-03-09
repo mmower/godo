@@ -4,27 +4,46 @@ module Godo
   
   class Finder
     
+    # Find, if possible, a single project path matching the query string.
+    #
     def self.find( query, options )
-      finder = Finder.new( options["projects"], options["ignores"] )
-      paths = finder.find( Regexp.escape( query ) )
-      
-      if paths.size > 1
-        paths = strip_inexact_matches( query, paths )
-        if paths.size > 1
-          if base_match( paths )
-            paths[0,1]
-          end
-        end
+      let( Finder.new( options["projects"], options["ignores"] ) ) do |finder|
+        finder.find( Regexp.escape( query ) )
       end
-      
-      paths
     end
     
+    # Create a Finder which will search under the given root folders, ignoring
+    # folders that match any of the specified 'ignore' patterns.
+    #
     def initialize( roots, ignores )
       @roots = roots.map { |root| File.expand_path( root ) }
       @ignores = ignores.map { |ignore| Regexp.compile( "/#{ignore}" ) }
     end
     
+    # Search for a folder matching the query.
+    #
+    # 1) If a single folder is found it is returned.
+    #
+    # 2) If multiple folders are found then an attempt is made to strip any folders
+    # that are not an exact match for the query string.
+    #
+    # For example with the query 'reeplay' returning the following paths
+    #
+    # Paths:
+    #   /root/reeplay.it
+    #   /root/reeplay.it/reeplay
+    #   /root/reeplay.it/reeplay/app
+    #
+    # The first path would be stripped because none of it's components are an exact
+    # match for the query term.
+    #
+    # 3) If there are still multiple folders then the remaining folders are checked
+    # to see if they contain the first folder as a base path. If so the first
+    # path is returned.
+    #
+    # In this case because the second of the two remaining paths has the first as a
+    # base path, the first path would be returned.
+    #
     def find( query )
       matches = []
       @roots.each do |root|
@@ -38,8 +57,20 @@ module Godo
         end
       end
       
-      # puts "Found: #{matches.inspect}"
-      matches
+      if matches.size > 1
+        matches = strip_inexact_matches( query, matches )
+        if matches.size > 1
+          if base_match( matches )
+            matches[0,1]
+          else
+            matches
+          end
+        else
+          matches
+        end
+      else
+        matches
+      end
     end
     
     def matches?( path, query )
@@ -52,7 +83,6 @@ module Godo
 
     def excluded?( path )
       ignore = !!@ignores.detect { |ignore| ignore.match( path ) }
-      #puts "Ignore: #{path.inspect} -> #{ignore.inspect}"
       ignore
     end
     

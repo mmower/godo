@@ -3,6 +3,9 @@
 require 'rubygems'
 require 'trollop'
 require 'godo'
+require 'ick'
+
+Ick.sugarize
 
 opts = Trollop::options do
   opt :install, "Create a fresh ~/.godo configuration file"
