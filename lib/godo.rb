@@ -37,18 +37,22 @@ module Godo
     config = YAML::load( File.read( File.expand_path( "~/.godo" ) ) )
     require 'finder'
     paths = Finder.find( query, config )
-    if paths.empty?
+    found_path = if paths.empty?
       puts "No paths match for: #{query}"
     elsif paths.size > 1
+      require 'highline/import'
       puts "Multiple, ambgiuous, paths match for: #{query}"
-      paths.each do |path|
-        puts "\t#{path}"
-      end
+      puts "Please pick one of the following:"
+      choose(*paths)
     else
       puts "Matching project: #{paths.first}"
+      paths.first
+    end
+    
+    if found_path
       require 'project'
       project = Project.new( options, config )
-      project.invoke( paths.first )
+      project.invoke( found_path )
     end
   end
   
