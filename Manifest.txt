@@ -9,3 +9,4 @@ lib/project.rb
 lib/session.rb
 lib/template.yml
 lib/sessions/iterm_session.rb
+lib/sessions/terminal_session.rb
