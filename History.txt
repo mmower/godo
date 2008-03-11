@@ -10,7 +10,7 @@
 
   * Removed some test fluff that got left in the release
 
-=== 1.0.4 / 2008-03-11
+=== 1.0.5 / 2008-03-11
 
 * Incorporated changes from Lee Marlow <lee.marlow@gmail.com>
 

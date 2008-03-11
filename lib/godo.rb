@@ -1,7 +1,7 @@
 require 'yaml'
 
 module Godo
-  VERSION = '1.0.4'
+  VERSION = '1.0.5'
   LIBPATH = File.expand_path( File.dirname( __FILE__ ) )
   
   # When called with no arguments this will return the path to the gem

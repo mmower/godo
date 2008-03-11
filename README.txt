@@ -1,5 +1,7 @@
 = godo
 
+* version: 1.0.5
+* released: 2008-03-11
 * http://simplyruby.rubyforge.org/godo
 
 == DESCRIPTION:
