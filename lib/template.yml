@@ -192,6 +192,7 @@ projects:
   - ~/Projects/rails
   - ~/Projects/Cocoa
 
-# The session controller to use. Right now iTerm is the only
-# game in town.
+# The session controller to use. Right now iTerm and Terminal are the
+# only options.
 sessions: ITermSession
+# sessions: TerminalSession
