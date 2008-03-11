@@ -24,15 +24,26 @@ module Godo
     
   private
     def invoke_actions( path, action_group )
-      session = @session_class.new( path )
+      @session ||= @session_class.new( path )
       
       action_group.each do |action_item|
         action = case action_item
         when String
           @actions[action_item]
         when Hash
-          action_item['label'] ||= action_item['command']
-          action_item
+          if action_item["matcher"]
+            if matcher = @matchers.find { |matcher| matcher["name"] == action_item["matcher"] }
+              invoke_actions( path, matcher["actions"])
+              nil
+            else
+              puts "\tUnknown matcher: #{action_item["matcher"]}"
+            end
+          elsif action_item["command"]
+            action_item["label"] ||= action_item["command"]
+            action_item
+          else
+            puts "\tUnknown action type: #{action_item}"
+          end
         else
           puts "\tUnknown action type: #{action_item}"
         end
@@ -52,7 +63,7 @@ module Godo
           end
         
           puts "\trunning: #{action["label"]} (exit: #{exit})"
-          session.create( action["label"], action["command"], exit )
+          @session.create( action["label"], action["command"], exit )
         else
           puts "\tMissing action: #{action_item.inspect}"
         end
