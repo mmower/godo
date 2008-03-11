@@ -32,7 +32,7 @@ creating controllers for other unixen should be straightforward if they can be c
 
 godo is a rewrite of my original 'gp' script (http://matt.blogs.it/entries/00002674.html) which fixes
 a number of the deficiencies of that script, turns it into a gem, has a better name, and steals the
-idea of using heuristics to detect project types from Solomon Whites gp variant (http://onrails.org/articles/2007/11/28/scripting-the-leopard-terminal).
+idea of using heuristics to detect project types from Solomon White's gp variant (http://onrails.org/articles/2007/11/28/scripting-the-leopard-terminal).
 	
 godo lives at the excellent GitHub: http://github.com/mmower/godo/ and accepts patches.
 
@@ -41,6 +41,7 @@ godo lives at the excellent GitHub: http://github.com/mmower/godo/ and accepts p
 * All-in-one configuration file
 * Flexible heuristics for detecting project type
 * Flexible actions for running commands
+* Project level customizations
 
 == SYNOPSIS:
 
@@ -55,7 +56,19 @@ godo <project>
 Where project is a search term that will match part of the project path name.
 
 If the project has a .godo file at its root, then those actions will be used
-instead of using the heuristics.
+instead of using the heuristics.  A project level .godo file can reference
+actions defined in ~/.godo, a group of actions by project type, and
+arbitrary commands.
+
+Here's a sample project level .godo file:
+---
+actions:
+  - terminal
+  - command: echo 'tab before matcher'
+    label: This tab goes before the project matcher
+  - matcher: rails+git
+  - command: echo 'tab after matcher'
+  - terminal
 
 To open a project and override the project type (i.e. do not use heuristics nor
 a project level .godo file):
