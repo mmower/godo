@@ -26,10 +26,18 @@ module Godo
     def invoke_actions( path, action_group )
       session = @session_class.new( path )
       
-      missing_actions = action_group.find_all { |action| !@actions.has_key?( action ) }
-      if missing_actions.empty?
-        action_group.each { |action_name|
-          action = @actions[action_name]
+      action_group.each do |action_item|
+        action = case action_item
+        when String
+          @actions[action_item]
+        when Hash
+          action_item['label'] ||= action_item['command']
+          action_item
+        else
+          puts "\tUnknown action type: #{action_item}"
+        end
+        
+        if action
           exit = case action["exit"]
           when true
             true
@@ -42,13 +50,11 @@ module Godo
           else
             false
           end
-          
-          puts "\trunning: #{action_name} (exit: #{exit})"
+        
+          puts "\trunning: #{action["label"]} (exit: #{exit})"
           session.create( action["label"], action["command"], exit )
-        }
-      else
-        missing_actions.each do |action|
-          puts "\tMissing action: #{action}"
+        else
+          puts "\tMissing action: #{action_item.inspect}"
         end
       end
     end
