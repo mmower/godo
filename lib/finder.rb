@@ -7,17 +7,20 @@ module Godo
     # Find, if possible, a single project path matching the query string.
     #
     def self.find( query, options )
-      let( Finder.new( options["projects"], options["ignores"] ) ) do |finder|
+      let( Finder.new( options["projects"], options["ignores"], options["max_depth"] ) ) do |finder|
         finder.find( Regexp.escape( query ) )
       end
     end
     
     # Create a Finder which will search under the given root folders, ignoring
-    # folders that match any of the specified 'ignore' patterns.
+    # folders that match any of the specified 'ignore' patterns.  Searches only
+    # max_depth folders below the root paths, searches unlimited depth if not
+    # specified.
     #
-    def initialize( roots, ignores )
+    def initialize( roots, ignores, max_depth = 0 )
       @roots = roots.map { |root| File.expand_path( root ) }
       @ignores = ignores.map { |ignore| Regexp.compile( "/#{ignore}" ) }
+      @max_depth = max_depth.to_i
     end
     
     # Search for a folder matching the query.
@@ -49,6 +52,14 @@ module Godo
       @roots.each do |root|
         # puts "Searching for #{query} in #{root}"
         Find.find( root ) do |path|
+          if @max_depth > 0
+            # limit to @max_depth
+            partial_path = path.gsub(root, '')
+            Find.prune if partial_path =~ /\A\.+\Z/
+            depth = partial_path.split('/').length
+            Find.prune if depth > @max_depth + 1
+          end
+
           if filtered?( path )
             Find.prune
           elsif matches?( path, query )

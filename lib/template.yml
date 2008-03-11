@@ -192,6 +192,10 @@ projects:
   - ~/Projects/rails
   - ~/Projects/Cocoa
 
+# Specifies how far down to search into the project root paths,
+# defaults to unlimited depth.
+# max_depth: 2
+
 # The session controller to use. Right now iTerm and Terminal are the
 # only options.
 sessions: ITermSession
