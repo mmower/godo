@@ -57,6 +57,8 @@ module Godo
       if @options[:override]
         puts @options[:override]
         @matchers.find { |matcher| matcher["name"] == @options[:override] }
+      elsif File.file?( project_level_godo = File.join(path, '.godo' ) )
+        YAML::load( File.read( project_level_godo ) )
       else
         @matchers.detect { |matcher|
           matcher["heuristics"].all? { |heuristic|
