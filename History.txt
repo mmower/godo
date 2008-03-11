@@ -9,3 +9,12 @@
 * 1 minor fix
 
   * Removed some test fluff that got left in the release
+
+=== 1.0.4 / 2008-03-11
+
+* Incorporated changes from Lee Marlow <lee.marlow@gmail.com>
+
+  * Project level .godo files
+  * Max depth in Finder
+  * Terminal.app sessions
+  * Nice job Lee!
