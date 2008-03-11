@@ -58,7 +58,7 @@ If the project has a .godo file at its root, then those actions will be used
 instead of using the heuristics.
 
 To open a project and override the project type (i.e. do not use heuristics nor
-project level .godo file):
+a project level .godo file):
 
 godo -o <matcher> <project>
 
