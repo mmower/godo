@@ -1,4 +1,5 @@
 require 'find'
+require 'set'
 
 module Godo
   
@@ -49,23 +50,10 @@ module Godo
     #
     def find( query )
       matches = []
+      searched = Set.new
       @roots.each do |root|
         # puts "Searching for #{query} in #{root}"
-        Find.find( root ) do |path|
-          if @max_depth > 0
-            # limit to @max_depth
-            partial_path = path.gsub(root, '')
-            Find.prune if partial_path =~ /\A\.+\Z/
-            depth = partial_path.split('/').length
-            Find.prune if depth > @max_depth + 1
-          end
-
-          if filtered?( path )
-            Find.prune
-          elsif matches?( path, query )
-            matches << path
-          end
-        end
+        find_in_path( root, root, query, matches, searched )
       end
       
       if matches.size > 1
@@ -83,18 +71,39 @@ module Godo
         matches
       end
     end
-    
+
+    def find_in_path( root, start_path, query, matches, searched )
+      Find.find( start_path ) do |path|
+        Find.prune unless File.directory?(path)
+        # prevent infinite recursions from symlinks
+        Find.prune unless searched.add?(path)
+
+        if @max_depth > 0
+          # limit to @max_depth
+          partial_path = path.gsub(root, '')
+          Find.prune if partial_path =~ /\A\.+\Z/
+          depth = partial_path.split('/').length
+          puts "Depth from '#{root}' to '#{path}': #{depth}"
+          Find.prune if depth > @max_depth + 1
+        end
+
+        if excluded?( path )
+          Find.prune
+        elsif matches?( path, query )
+          matches << path
+        elsif File.directory?( path ) && File.symlink?( path )
+          # Find.find does not recurse into symlinked directories, so do it manually
+          find_in_path( root, File.join(path, '/'), query, matches, searched )
+        end
+      end
+    end
+
     def matches?( path, query )
       path.match( query )
     end
 
-    def filtered?( path )
-      !File.directory?( path ) || excluded?( path )
-    end
-
     def excluded?( path )
-      ignore = !!@ignores.detect { |ignore| ignore.match( path ) }
-      ignore
+      !!@ignores.detect { |ignore| ignore.match( path ) }
     end
     
     def strip_inexact_matches( query, paths )
