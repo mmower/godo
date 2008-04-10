@@ -88,13 +88,12 @@ module Godo
       end
     end
 
+    # is path more than @max_depth levels below root?
     def past_max_depth?( root, path )
       if @max_depth > 0
-        # limit to @max_depth
         partial_path = path.gsub(root, '')
         return true if partial_path =~ /\A\.+\Z/
         depth = partial_path.split('/').length
-        # puts "Depth from '#{root}' to '#{path}': #{depth}"
         return true if depth > @max_depth + 1
       end
       false
