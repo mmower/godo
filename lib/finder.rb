@@ -74,36 +74,34 @@ module Godo
 
     def find_in_path( root, start_path, query, matches, searched )
       Find.find( start_path ) do |path|
-        Find.prune unless File.directory?(path)
-        # prevent infinite recursions from symlinks
-        Find.prune unless searched.add?(path)
+        Find.prune unless File.directory?(path) # only look at directories
+        Find.prune unless searched.add?(path) # prevent infinite recursions from symlinks
+        Find.prune if past_max_depth?(root, path)
+        Find.prune if ignored?(path)
 
-        if @max_depth > 0
-          # limit to @max_depth
-          partial_path = path.gsub(root, '')
-          Find.prune if partial_path =~ /\A\.+\Z/
-          depth = partial_path.split('/').length
-          puts "Depth from '#{root}' to '#{path}': #{depth}"
-          Find.prune if depth > @max_depth + 1
-        end
-
-        if excluded?( path )
-          Find.prune
-        elsif matches?( path, query )
+        if path.match( query )
           matches << path
-        elsif File.directory?( path ) && File.symlink?( path )
+        elsif File.symlink?( path )
           # Find.find does not recurse into symlinked directories, so do it manually
           find_in_path( root, File.join(path, '/'), query, matches, searched )
         end
       end
     end
 
-    def matches?( path, query )
-      path.match( query )
+    def past_max_depth?( root, path )
+      if @max_depth > 0
+        # limit to @max_depth
+        partial_path = path.gsub(root, '')
+        return true if partial_path =~ /\A\.+\Z/
+        depth = partial_path.split('/').length
+        # puts "Depth from '#{root}' to '#{path}': #{depth}"
+        return true if depth > @max_depth + 1
+      end
+      false
     end
 
-    def excluded?( path )
-      !!@ignores.detect { |ignore| ignore.match( path ) }
+    def ignored?( path )
+      @ignores.any? { |ignore| path.match( ignore ) }
     end
     
     def strip_inexact_matches( query, paths )
