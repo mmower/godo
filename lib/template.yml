@@ -196,7 +196,8 @@ projects:
 # defaults to unlimited depth.
 # max_depth: 2
 
-# The session controller to use. Right now iTerm and Terminal are the
-# only options.
-sessions: ITermSession
+# The session controller to use. Will autodetect iTerm and Apple Terminal
+# using the TERM_PROGRAM environment variable. Specify to use a custom class
+# or to override for a specific project.
+# sessions: ITermSession
 # sessions: TerminalSession

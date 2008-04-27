@@ -9,7 +9,7 @@ module Godo
       @heuristics = config["heuristics"]
       @actions = config["actions"]
       @matchers = config["matchers"]
-      @session_class = Godo.const_get( config["sessions"] )
+      @session_class = Session.klass( config["sessions"] )
     end
     
     def invoke( path )
@@ -23,6 +23,7 @@ module Godo
     end
     
   private
+    
     def invoke_actions( path, action_group )
       @session ||= @session_class.new( path )
       
