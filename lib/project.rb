@@ -62,7 +62,7 @@ module Godo
             false
           end
         
-          puts "\trunning: #{action["label"]} (exit: #{exit})"
+          puts "\trunning: #{action["label"] || action["command"]} (exit: #{exit})"
           @session.create( action["label"], action["command"], exit )
         else
           puts "\tMissing action: #{action_item.inspect}"
