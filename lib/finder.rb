@@ -48,26 +48,7 @@ module Godo
     # base path, the first path would be returned.
     #
     def find( query )
-      matches = []
-      @roots.each do |root|
-        # puts "Searching for #{query} in #{root}"
-        Find.find( root ) do |path|
-          if @max_depth > 0
-            # limit to @max_depth
-            partial_path = path.gsub(root, '')
-            Find.prune if partial_path =~ /\A\.+\Z/
-            depth = partial_path.split('/').length
-            Find.prune if depth > @max_depth + 1
-          end
-
-          if filtered?( path )
-            Find.prune
-          elsif matches?( path, query )
-            matches << path
-          end
-        end
-      end
-      
+      matches = @roots.inject( [] ) { |results,root| results.concat( find_in_root( root, query ) ) }
       if matches.size > 1
         matches = strip_inexact_matches( query, matches )
         if matches.size > 1
@@ -82,6 +63,26 @@ module Godo
       else
         matches
       end
+    end
+    
+    def find_in_root( root, query )
+      matches = []
+      Find.find( root ) do |path|
+        if @max_depth > 0
+          # limit to @max_depth
+          partial_path = path.gsub(root, '')
+          Find.prune if partial_path =~ /\A\.+\Z/
+          depth = partial_path.split('/').length
+          Find.prune if depth > @max_depth + 1
+        end
+
+        if filtered?( path )
+          Find.prune
+        elsif matches?( path, query )
+          matches << path
+        end
+      end
+      matches
     end
     
     def matches?( path, query )
@@ -112,6 +113,34 @@ module Godo
       path_match = Regexp.compile( "^#{paths.first}" )
       paths[1..-1].all? { |path| path.match( path_match ) }
     end
+    
+    def find_with_caching( query )
+      cache = if File.exist?( cache_file )
+        YAML::load( File.read( cache_file ) )
+      else
+        {}
+      end
+      
+      if cache[query]
+        results = cache[query]
+        puts "Using cached entry from #{cache_file}"
+      else
+        results = find_without_caching( query )
+        if results.size == 1
+          cache[query] = [results.first]
+          File.open( cache_file, 'w' ) { |f| YAML::dump( cache, f ) }
+        end
+      end
+      
+      results
+    end
+    
+    def cache_file
+      @@cache_file ||= File.expand_path( "~/.godo_cache" )
+    end
+    
+    alias_method :find_without_caching, :find
+    alias_method :find, :find_with_caching
     
   end
   
