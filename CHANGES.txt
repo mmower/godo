@@ -1,0 +1,8 @@
+Changes from 1.0.6
+
+* Autodetect appropriate session type to use from the TERM_PROGRAM environment variable.
+* Cache found directories in ~/.godo_cache
+
+Changes from 1.0.5
+
+* Optimizations to the Finder to support maximum depths

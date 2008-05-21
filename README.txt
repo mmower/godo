@@ -1,7 +1,7 @@
 = godo
 
-* version: 1.0.6
-* released: 2008-03-11
+* version: 1.0.7
+* released: 2008-05-21
 * http://simplyruby.rubyforge.org/godo
 
 == DESCRIPTION:
@@ -18,27 +18,15 @@ paths found in one or more configured project roots. It will make some straightf
 disambiguate among multiple matches to find the one you want.
 
 godo then uses configurable heuristics to figure out what type of project it is, for example "a RoR
-project using RSpec and Subversion". From that it will invokes a series of action appropriate to the
-type of project detected with each action being run, from the project folder, in its own terminal
-session.
+project using RSpec and Subversion". From that it will invokes a series of action appropriate to the type of project detected with each action being run, from the project folder, in its own terminal session.
 
-godo is entirely configured by a YAML file (~/.godo) that contains project types, heuristics, actions,
-project paths, and a session controller. A sample configuration file is provided that can be installed
-using godo --install.
+godo is entirely configured by a YAML file (~/.godo) that contains project types, heuristics, actions, project paths, and a session controller. A sample configuration file is provided that can be installed using godo --install.
 	
-godo comes with an iTerm session controller for MacOSX that uses the rb-appscript gem to control iTerm
-(see lib/session.rb and lib/sessions/iterm_session.rb). It should be relatively straightforward to add
-new controller (e.g. for Leopard Terminal.app), or a controller that works in a different way (e.g. by
-creating new windows instead of new tabs). There is nothing MacOSX specific about the rest of godo so
-creating controllers for other unixen should be straightforward if they can be controlled from ruby.
+godo comes with an iTerm session controller for MacOSX that uses the rb-appscript gem to control iTerm (see lib/session.rb and lib/sessions/iterm_session.rb). It should be relatively straightforward to add new controller (e.g. for Leopard Terminal.app), or a controller that works in a different way (e.g. by creating new windows instead of new tabs). There is nothing MacOSX specific about the rest of godo so creating controllers for other unixen should be straightforward if they can be controlled from ruby.
 
-godo is a rewrite of my original 'gp' script (http://matt.blogs.it/entries/00002674.html) which fixes
-a number of the deficiencies of that script, turns it into a gem, has a better name, and steals the
-idea of using heuristics to detect project types from Solomon White's gp variant (http://onrails.org/articles/2007/11/28/scripting-the-leopard-terminal).
+godo is a rewrite of my original 'gp' script (http://matt.blogs.it/entries/00002674.html) which fixes a number of the deficiencies of that script, turns it into a gem, has a better name, and steals the idea of using heuristics to detect project types from Solomon White's gp variant (http://onrails.org/articles/2007/11/28/scripting-the-leopard-terminal).
   
-godo now includes contributions from Lee Marlow <lee.marlow@gmail.com> including support for project
-level .godo files to override the global configuration, support for Terminal.app, and maximum depth
-support to speed up the finder.
+godo now includes contributions from Lee Marlow <lee.marlow@gmail.com> including support for project level .godo files to override the global configuration, support for Terminal.app, and maximum depth support to speed up the finder.
 	
 godo lives at the excellent GitHub: http://github.com/mmower/godo/ and accepts patches and forks.
 
