@@ -52,10 +52,9 @@ module Godo
       matches = []
       searched = Set.new
       @roots.each do |root|
-        # puts "Searching for #{query} in #{root}"
         find_in_path( root, root, query, matches, searched )
       end
-      
+
       if matches.size > 1
         matches = strip_inexact_matches( query, matches )
         if matches.size > 1
@@ -71,7 +70,7 @@ module Godo
         matches
       end
     end
-
+    
     def find_in_path( root, start_path, query, matches, searched )
       Find.find( start_path ) do |path|
         Find.prune unless File.directory?(path) # only look at directories
@@ -86,6 +85,7 @@ module Godo
           find_in_path( root, File.join(path, '/'), query, matches, searched )
         end
       end
+      matches
     end
 
     # is path more than @max_depth levels below root?
@@ -118,6 +118,34 @@ module Godo
       path_match = Regexp.compile( "^#{paths.first}" )
       paths[1..-1].all? { |path| path.match( path_match ) }
     end
+    
+    def find_with_caching( query )
+      cache = if File.exist?( cache_file )
+        YAML::load( File.read( cache_file ) )
+      else
+        {}
+      end
+      
+      if cache[query]
+        results = cache[query]
+        puts "Using cached entry from #{cache_file}"
+      else
+        results = find_without_caching( query )
+        if results.size == 1
+          cache[query] = [results.first]
+          File.open( cache_file, 'w' ) { |f| YAML::dump( cache, f ) }
+        end
+      end
+      
+      results
+    end
+    
+    def cache_file
+      @@cache_file ||= File.expand_path( "~/.godo_cache" )
+    end
+    
+    alias_method :find_without_caching, :find
+    alias_method :find, :find_with_caching
     
   end
   

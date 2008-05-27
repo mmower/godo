@@ -9,7 +9,7 @@ module Godo
       @heuristics = config["heuristics"]
       @actions = config["actions"]
       @matchers = config["matchers"]
-      @session_class = Godo.const_get( config["sessions"] )
+      @session_class = Session.klass( config["sessions"] )
     end
     
     def invoke( path )
@@ -23,6 +23,7 @@ module Godo
     end
     
   private
+    
     def invoke_actions( path, action_group )
       @session ||= @session_class.new( path )
       
@@ -62,7 +63,7 @@ module Godo
             false
           end
         
-          puts "\trunning: #{action["label"]} (exit: #{exit})"
+          puts "\trunning: #{action["label"] || action["command"]} (exit: #{exit})"
           @session.create( action["label"], action["command"], exit )
         else
           puts "\tMissing action: #{action_item.inspect}"
