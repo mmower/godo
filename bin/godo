@@ -8,6 +8,18 @@ require 'ick'
 Ick.sugarize
 
 opts = Trollop::options do
+  version "godo (#{Godo::VERSION})"
+  banner <<EOS
+  go (to project) do (stuffs)
+
+  godo provides a smart way of opening a project folder in multiple terminal tabs and, in each tab,
+  invoking a commands appropriate to that project
+
+  Usage:
+    godo [options] <project>
+
+  where [options] are:
+EOS
   opt :install, "Create a fresh ~/.godo configuration file"
   opt :override, "Override heuristics to specify project type", :short => 'o', :type => :string
   opt :list_types, "List available project types", :short => 'l'
