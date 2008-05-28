@@ -1,7 +1,7 @@
 = godo
 
-* version: 1.0.7
-* released: 2008-05-21
+* version: 1.0.8
+* released: 2008-05-28
 * http://simplyruby.rubyforge.org/godo
 
 == DESCRIPTION:
@@ -68,6 +68,10 @@ To open a project and override the project type (i.e. do not use heuristics nor
 a project level .godo file):
 
 godo -o <matcher> <project>
+
+To see what project types are available:
+
+godo --list-types
 
 == REQUIREMENTS:
 

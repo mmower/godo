@@ -10,6 +10,7 @@ Ick.sugarize
 opts = Trollop::options do
   opt :install, "Create a fresh ~/.godo configuration file"
   opt :override, "Override heuristics to specify project type", :short => 'o', :type => :string
+  opt :list_types, "List available project types", :short => 'l'
 end
 
 if opts[:install]

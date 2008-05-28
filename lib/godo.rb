@@ -1,7 +1,7 @@
 require 'yaml'
 
 module Godo
-  VERSION = '1.0.7'
+  VERSION = '1.0.8'
   LIBPATH = File.expand_path( File.dirname( __FILE__ ) )
   
   # When called with no arguments this will return the path to the gem
@@ -35,6 +35,20 @@ module Godo
   # project and invoke the appropriate actions.
   def self.godo( query, options )
     config = YAML::load( File.read( File.expand_path( "~/.godo" ) ) )
+    
+    if options[:list_types]
+      matchers = config["matchers"]
+      if matchers && !matchers.empty?
+        puts "Available project types:"
+        config["matchers"].each do |matcher|
+          puts " - #{matcher['name']}"
+        end
+      else
+        puts "No available matchers found, please check your ~/.godo file"
+      end
+      return
+    end
+    
     require 'finder'
     paths = Finder.find( query, config )
     found_path = if paths.empty?
