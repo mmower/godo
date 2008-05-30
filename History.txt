@@ -18,3 +18,7 @@
   * Max depth in Finder
   * Terminal.app sessions
   * Nice job Lee!
+
+=== 1.0.8 / 2008-05-30
+
+* Lots of small improvements including more from Lee Marlow

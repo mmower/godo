@@ -1,3 +1,9 @@
+Changes from 1.0.7
+
+* Added --list-types to show available project types
+* Refactorings to improve search code
+* Improvements to project level .godo files
+
 Changes from 1.0.6
 
 * Autodetect appropriate session type to use from the TERM_PROGRAM environment variable.
